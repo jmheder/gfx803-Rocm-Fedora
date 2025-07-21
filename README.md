@@ -33,13 +33,13 @@ There is no garantess my binaries will work on your platform, I'll try to keep m
 ROCm platform on Fedora 42, as they dont support gfx803, also if your ROCm libraries was used in other programs, you're in trouble, consider
 a new gfx card.
 
-<b>Remove the ROCm platform (Fedora) 42:
+Remove the ROCm platform (Fedora) 42:
 
 ```
 # dnf remove rocm* hip*
 ```
 
-<b>Get the repository (this will take some time):
+Get the repository (this will take some time):
 
 ```
 # dnf install git
@@ -48,7 +48,7 @@ a new gfx card.
 ```
 
 
-<b>Install re-comiled (old) ROCm platform and pytorch. Rocm is placed into /opt/rocm and pytorch/pyvision into virtual environment. Please note
+Install re-comiled (old) ROCm platform and pytorch. Rocm is placed into /opt/rocm and pytorch/pyvision into virtual environment. Please note
 the pytorch wheel uses version 2.0.0, there is an alternative version "dressed" at "2.1.0" to make some newer ComfyUI branches happy, but it's still
 the 2.0.0.
 
@@ -86,7 +86,7 @@ a + b =
 ```
 
 
-4. LD LIBRARY PATH update 
+## LD LIBRARY PATH update 
 
 If everything works you can install pytorch globally (if you want) or just keep on justing vitual onces (I do that). You need to update LD_LIBRARY_PATH and update the system
 
