@@ -1,6 +1,6 @@
 # ROCm-5.4.1 for Fedora 42 
 
-ROCM support for GFX803, Polaris including pytorch 2.2 (alpha) for python 3.10.
+ROCM support for GFX803, Polaris including pytorch 2.0.0 (alpha) for python 3.10.
 
 RX460, RX470, RX480, RX560, RX570, RX580, RX590
 
@@ -23,77 +23,105 @@ platform is a custom rocm 5.4.1 and not all libraries are present, but enought t
 trying to compile other project that needs ROCm, you'll need to resolve those yourself, my advice is skips all the libraries that is not needed, 
 less is good.
 
+## ROCm version
+
+This ROCm version is not a true 5.4.1 but really close, some of my repositories (hip) could not be compiled correctly, so it's more like "5.4.1+"
+
 ## Installing binaries
 
 There is no garantess my binaries will work on your platform, I'll try to keep mine updated. Before installing you must remove you'r entire
 ROCm platform on Fedora 42, as they dont support gfx803, also if your ROCm libraries was used in other programs, you're in trouble, consider
 a new gfx card.
 
+<b>Remove the ROCm platform (Fedora) 42:
 
-1. Remove the ROCm platform (Fedora)
+```
+# dnf remove rocm* hip*
+```
 
-'''
-#bash dnf remove rocm* hip*
-'''
+<b>Get the repository (this will take some time):
 
-
-2. Get the repository 
-
-'''
-#bash dnf install git
-#bash git clone github://.....
-#cd rocm-gfx803
-'''
+```
+# dnf install git
+# git clone https://github.com/jmheder/gfx803-Rocm-Fedora.git
+# cd gfx803-Rocm-Fedora
+```
 
 
-
-3. Install new ROCm platform 
-The new platform is placed into /opt/rocm so you don't get into huge troubles if you my accident installed the newer ROCm again,
-
-'''
-#bash rpm --install github-rocm.5.2.1-jmh-private-build.rpm
-'''
+<b>Install re-comiled (old) ROCm platform and pytorch. Rocm is placed into /opt/rocm and pytorch/pyvision into virtual environment. Please note
+the pytorch wheel uses version 2.0.0, there is an alternative version "dressed" at "2.1.0" to make some newer ComfyUI branches happy, but it's still
+the 2.0.0.
 
 
-3. Update your python 3.10 and install pytorch 
-We use a local virtual directory and test it (i.e. check if the works ok).
+```
+# rpm --install packages/ROCm-5.4.1-1_private_build.fc42.x86_64.rpm 
+# /usr/bin/python3.10 -m pip install
+# /usr/bin/python3.10 -m venv venv
+# source venv/bin/activate
+# pip install packages/torch-2.0-cp310-cp310-linux_x86_64.whl
+```
 
-'''
-#bash /usr/bin/python3.10 -m pip install
-#bash /usr/bin/python3.10 -m venv venv
-#bash source venv/bin/activate
-#bash 
-'''
+Verify that pytorch is working (matrix values will change):
 
-and check if everything runs .. 
+```
+# export LD_LIBRARY_PATH=/opt/rocm/lib:/opt/rocm/lib64:/opt/rocm/llvm/lib:/opt/rocm/hip/lib:$LD_LIBRARY_PATH
+# python demos/checkplatform.py
 
-'''
-#bash python checkplatform.py
-lkjælfgdfgdsgfgfdgsdfgfdgsdfg
-'''
+ROCm available: 5.4.22802-aaa1e3d8
+Is ROCm GPU available? True
+Device count: 1
+Device name: AMD Radeon RX 480 Graphics
+Tensor a:
+ tensor([[-1.2463,  0.9105, -1.2239],
+        [ 0.5914,  0.1759,  0.1282],
+        [-0.2121, -0.0624, -0.9687]], device='cuda:0')
+Tensor b:
+ tensor([[-0.7422, -0.0970,  0.4978],
+        [ 0.1455,  1.5842,  1.7835],
+        [ 0.7233, -0.4944,  0.6734]], device='cuda:0')
+a + b =
+ tensor([[-1.9885,  0.8136, -0.7261],
+        [ 0.7369,  1.7601,  1.9118],
+        [ 0.5112, -0.5568, -0.2953]], device='cuda:0')
+```
 
 
-4. Finish Up! - Update your platform - PATH
+4. LD LIBRARY PATH update 
 
-If everything works you can install pytorch globally (if you want) or just keep on justing vitual onces (I do that).
-You new pathes must be correct and update the RPM files did NOT do that.
+If everything works you can install pytorch globally (if you want) or just keep on justing vitual onces (I do that). You need to update LD_LIBRARY_PATH and update the system
 
-'''
-'''
+```
+cp rochip.conf /etc/ld.so.conf.d/
+sudo ldconfig
+```
 
-## Complking
+## ComfyUI and A1111
+
+I can't help you getting ComfyU or A1111 to run, they're not easy to get running, and even harder when you're on a AMD platform, but the best way to get it running is to install all the tools in the requirements.txt but skip torch. First you need to checkout (ComfyUIU or A1111) a branch that supports pytorch 2.0 or around that. Alternatively you can also lets pip install everything, then manually remove the torch  and reinstall the once I have compiled for Fedora 42, like this:
+
+```
+pip install -r requirements.txt
+pip uninstall torch
+pip install packages/torch-2.0-cp310-cp310-linux_x86_64.whl
+```
+
+If ComfyUI or A1111 complains about the pytorch is too old (2.0 and older) you can try to install the cheat wheel, it's the same 2.0
+but it's tagged as 2.1, this will help on some ComfyUI branches, the cheat wheel is :
+
+```
+pip install packages/torch-2.1-cp310-cp310-linux_x86_64.whl
+```
+ 
+## Torchvision and Torchaudio
+
+Todo, I need to recompile torchvision and torchaudio and include this into packages directory.
+
+## Compiling
 
 Not yet .. you can see my build scripts in the /scripts folder but its, but bascially it was build using gcc-14 and I experienced 
-dozon of issues, 99% of those were compiler warnings, keep in mind Fedora never had rocm 5.2 and the proper Fedora to build this on
+dozon of issues, 99% of those were compiler warnings, keep in mind Fedora never had ROCm 5.2 and the proper Fedora to build this on
 was approx 38-39. I'll try to see if I can find some time to make it happen. I few places I properly has to change a few lines of 
 code because the rules changed from warnings to hard-errors that needed to be fixed.
-
-
-
-
-
-
-
 
 
 
