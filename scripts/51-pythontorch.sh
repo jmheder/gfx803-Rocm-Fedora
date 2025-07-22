@@ -32,8 +32,10 @@ export USE_ROCM=1
 export USE_CUDA=0
 
 export CMAKE_PREFIX_PATH="/opt/rocm;/opt/rocm/llvm"
-
 export hip_DIR=/opt/rocm/hip/lib/cmake/hip
 
-python setup.py whell
+export PYTORCH_BUILD_VERSION=2.0
+export PYTORCH_BUILD_NUMBER=0
+
+#python setup.py install
 

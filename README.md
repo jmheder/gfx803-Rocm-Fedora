@@ -95,36 +95,47 @@ cp rochip.conf /etc/ld.so.conf.d/
 sudo ldconfig
 ```
 
-## ComfyUI and A1111
 
-I can't help you getting ComfyU or A1111 to run, they're not easy to get running, and even harder when you're on a AMD platform, but the best way to get it running is to install all the tools in the requirements.txt but skip torch. First you need to checkout (ComfyUIU or A1111) a branch that supports pytorch 2.0 or around that. Alternatively you can also lets pip install everything, then manually remove the torch  and reinstall the once I have compiled for Fedora 42, like this:
+## ComfyUI (using this build, 2.1 cheat wheel)
 
-```
-pip install -r requirements.txt
-pip uninstall torch
-pip install packages/torch-2.0-cp310-cp310-linux_x86_64.whl
-```
-
-If ComfyUI or A1111 complains about the pytorch is too old (2.0 and older) you can try to install the cheat wheel, it's the same 2.0
-but it's tagged as 2.1, this will help on some ComfyUI branches, the cheat wheel is :
+We'll use the pytorch-2.1 (cheat wheel, its actually 2.0) to fool ComfyUI to accept our build. Download ComfuUI and let the system download lots of stuff, which will be compatible with our build, and then tweak it to make ComfyUI happy. This install method is really slow and download a some GB to much, but its the safe and easy way to get ComfyUI running:
 
 ```
-pip install packages/torch-2.1-cp310-cp310-linux_x86_64.whl
+# git clone ComfyUI.git
+# git checkout -b heads/v0.1.3
+# cd ComfyUI
+# pip install -r requirements.txt 
+# pip install torchvision==0.15.1+rocm5.4.2 --extra-index-url https://download.pytorch.org/whl
+# pip install ../packages/torch-2.1-cp310-cp310-linux_x86_64.whl
+# pip install spandrel==0.4.1 --no-deps
 ```
- 
+
+It might complain against various issues, mostly that spandrel was compiled for torch 2.0.0 but you installed 2.1.0, but since this is a cheat wheel and actually compiled with 2.0.0, it's ok. Now please download tensor model from somewhere and place into \models and when 
+your ready launch ComfyUI:
+
+```
+# python main.py
+```
+
+Open a webbrowser and use the url http://127.0.0.1:8188
+
+
 ## TODOs
 
-* Recompile torch 2.0.0 with numpy>2.0 support, (ComfyUI)
-* Compile pytorch 2.1 (ComfyUI)
-* Compile torchvision 
+In prioritized order:
+
+* Compile real pytorch 2.1 (ComfyUI) and drop the cheat wheel
+* Use a newer ComfyUI branch
+* Compile torchvision
 * Compile torchaudio and include this into packages directory.
 * Create a description on how to install ComfyUI with these tools.
+* Would be nice to get A1111 running aswell
+* Get the scripts to compile correctly
 
 ## Compiling
 
 Not yet .. you can see my build scripts in the /scripts folder but its, but bascially it was build using gcc-14 and I experienced 
-dozon of issues, 99% of those were compiler warnings, keep in mind Fedora never had ROCm 5.2 and the proper Fedora to build this on
-was approx 38-39. I'll try to see if I can find some time to make it happen. I few places I properly has to change a few lines of 
+dozon of issues, 99% of those were compiler warnings. I'll try to see if I can find some time to make it happen. I few places I properly has to change a few lines of 
 code because the rules changed from warnings to hard-errors that needed to be fixed.
 
 

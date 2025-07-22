@@ -19,4 +19,4 @@ export HIP_PATH=/opt/rocm/hip
 export HIP_BIN_DIR=/opt/rocm/bin
 export PATH=$ROCM_PATH/bin:$ROCM_PATH/hip/bin:/opt/rocm/llvm/bin:$PATH
 export LIBRARY_PATH=/opt/rocm/lib:/opt/rocm/lib64:/opt/rocm/llvm/lib:/opt/rocm/hip/lib:/lib64:/lib:/usr/lib:/usr/local/lib
-export LD_LIBRARY_PATH=/opt/rocm/lib:/opt/rocm/lib64:/opt/rocm/lib:/opt/rocm/lib64:/opt/rocm/lib:/opt/rocm/lib64:/opt/rocm/llvm/lib:/opt/rocm/hip/lib:/lib64:/lib:/usr/lib:/usr/local/lib
+#export LD_LIBRARY_PATH=/opt/rocm/lib:/opt/rocm/lib64:/opt/rocm/lib:/opt/rocm/lib64:/opt/rocm/lib:/opt/rocm/lib64:/opt/rocm/llvm/lib:/opt/rocm/hip/lib:/lib64:/lib:/usr/lib:/usr/local/lib
