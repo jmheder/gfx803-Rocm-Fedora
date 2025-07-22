@@ -112,9 +112,13 @@ but it's tagged as 2.1, this will help on some ComfyUI branches, the cheat wheel
 pip install packages/torch-2.1-cp310-cp310-linux_x86_64.whl
 ```
  
-## Torchvision and Torchaudio
+## TODOs
 
-Todo, I need to recompile torchvision and torchaudio and include this into packages directory.
+* Recompile torch 2.0.0 with numpy>2.0 support, (ComfyUI)
+* Compile pytorch 2.1 (ComfyUI)
+* Compile torchvision 
+* Compile torchaudio and include this into packages directory.
+* Create a description on how to install ComfyUI with these tools.
 
 ## Compiling
 
@@ -122,7 +126,6 @@ Not yet .. you can see my build scripts in the /scripts folder but its, but basc
 dozon of issues, 99% of those were compiler warnings, keep in mind Fedora never had ROCm 5.2 and the proper Fedora to build this on
 was approx 38-39. I'll try to see if I can find some time to make it happen. I few places I properly has to change a few lines of 
 code because the rules changed from warnings to hard-errors that needed to be fixed.
-
 
 
 
