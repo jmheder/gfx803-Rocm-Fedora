@@ -36,15 +36,15 @@ a new gfx card.
 Remove the ROCm platform (Fedora) 42:
 
 ```
-# dnf remove rocm* hip*
+dnf remove rocm* hip*
 ```
 
 Get the repository (this will take some time):
 
 ```
-# dnf install git
-# git clone https://github.com/jmheder/gfx803-Rocm-Fedora.git
-# cd gfx803-Rocm-Fedora
+dnf install git
+git clone https://github.com/jmheder/gfx803-Rocm-Fedora.git
+cd gfx803-Rocm-Fedora
 ```
 
 
@@ -54,19 +54,24 @@ the 2.0.0.
 
 
 ```
-# rpm --install packages/ROCm-5.4.1-1_private_build.fc42.x86_64.rpm 
-# /usr/bin/python3.10 -m pip install
-# /usr/bin/python3.10 -m venv venv
-# source venv/bin/activate
-# pip install packages/torch-2.0-cp310-cp310-linux_x86_64.whl
+rpm --install packages/ROCm-5.4.1-1_private_build.fc42.x86_64.rpm 
+/usr/bin/python3.10 -m pip install
+/usr/bin/python3.10 -m venv venv
+source venv/bin/activate
+pip install packages/torch-2.0-cp310-cp310-linux_x86_64.whl
 ```
 
 Verify that pytorch is working (matrix values will change):
 
 ```
-# export LD_LIBRARY_PATH=/opt/rocm/lib:/opt/rocm/lib64:/opt/rocm/llvm/lib:/opt/rocm/hip/lib:$LD_LIBRARY_PATH
-# python demos/checkplatform.py
+export LD_LIBRARY_PATH=/opt/rocm/lib:/opt/rocm/lib64:/opt/rocm/llvm/lib:/opt/rocm/hip/lib:$LD_LIBRARY_PATH
+python demos/checkplatform.py
 
+```
+
+The console should say:
+
+```
 ROCm available: 5.4.22802-aaa1e3d8
 Is ROCm GPU available? True
 Device count: 1
@@ -101,20 +106,20 @@ sudo ldconfig
 We'll use the pytorch-2.1 (cheat wheel, its actually 2.0) to fool ComfyUI to accept our build. Download ComfuUI and let the system download lots of stuff, which will be compatible with our build, and then tweak it to make ComfyUI happy. This install method is really slow and download a some GB to much, but its the safe and easy way to get ComfyUI running:
 
 ```
-# git clone ComfyUI.git
-# git checkout -b heads/v0.1.3
-# cd ComfyUI
-# pip install -r requirements.txt 
-# pip install torchvision==0.15.1+rocm5.4.2 --extra-index-url https://download.pytorch.org/whl
-# pip install ../packages/torch-2.1-cp310-cp310-linux_x86_64.whl
-# pip install spandrel==0.4.1 --no-deps
+git clone ComfyUI.git
+cd ComfyUI
+git checkout -b heads/v0.1.3
+pip install -r requirements.txt 
+pip install torchvision==0.15.1+rocm5.4.2 --extra-index-url https://download.pytorch.org/whl
+pip install ../packages/torch-2.1-cp310-cp310-linux_x86_64.whl
+pip install spandrel==0.4.1 --no-deps
 ```
 
 It might complain against various issues, mostly that spandrel was compiled for torch 2.0.0 but you installed 2.1.0, but since this is a cheat wheel and actually compiled with 2.0.0, it's ok. Now please download tensor model from somewhere and place into \models and when 
 your ready launch ComfyUI:
 
 ```
-# python main.py
+python main.py
 ```
 
 Open a webbrowser and use the url http://127.0.0.1:8188
@@ -124,11 +129,10 @@ Open a webbrowser and use the url http://127.0.0.1:8188
 
 In prioritized order:
 
-* Compile real pytorch 2.1 (ComfyUI) and drop the cheat wheel
+* Compile real pytorch 2.1 (for ComfyUI) and drop the cheat wheel
 * Use a newer ComfyUI branch
 * Compile torchvision
 * Compile torchaudio and include this into packages directory.
-* Create a description on how to install ComfyUI with these tools.
 * Would be nice to get A1111 running aswell
 * Get the scripts to compile correctly
 
