@@ -103,7 +103,7 @@ sudo ldconfig
 
 ## ComfyUI (using this build, 2.1 cheat wheel)
 
-We'll use the pytorch-2.1 (cheat wheel, its actually 2.0) to fool ComfyUI to accept our build. Download ComfuUI and let the system download lots of stuff, which will be compatible with our build, and then tweak it to make ComfyUI happy. This install method is really slow and download a some GB to much, but its the safe and easy way to get ComfyUI running:
+im working towards a fully correct working system. We'll have to use the pytorch-2.1 (cheat wheel for now, its actually 2.0) to fool ComfyUI to accept our build. Download ComfuUI and let the system download lots of stuff, which will be compatible with our build, and then tweak it to make ComfyUI happy. This install method is really slow and download a some GB to much, but its the safe and easy way to get ComfyUI running:
 
 ```
 git clone ComfyUI.git
@@ -111,11 +111,12 @@ cd ComfyUI
 git checkout -b heads/v0.1.3
 pip install -r requirements.txt 
 pip install torchvision==0.15.1+rocm5.4.2 --extra-index-url https://download.pytorch.org/whl
-pip install ../packages/torch-2.1-cp310-cp310-linux_x86_64.whl
+pip install ../packages/torch-2.1.cheat-cp310-cp310-linux_x86_64.whl
 pip install spandrel==0.4.1 --no-deps
 ```
 
-It might complain against various issues, mostly that spandrel was compiled for torch 2.0.0 but you installed 2.1.0, but since this is a cheat wheel and actually compiled with 2.0.0, it's ok. Now please download tensor model from somewhere and place into \models and when 
+It might complain against various issues, mostly that spandrel was compiled for torch 2.0.0 but you installed 2.1.0, but since this is a cheat wheel and actually compiled with 2.0.0, it's ok. 
+Getting it to work correct also requires that all version are using the same numpy, otherwise  it will crash. Now please download tensor model from somewhere and place into \models and when 
 your ready launch ComfyUI:
 
 ```
@@ -124,6 +125,14 @@ python main.py
 
 Open a webbrowser and use the url http://127.0.0.1:8188
 
+## Torch versions in directory packages
+
+packages/torch-2.0-cp310-cp310-linux_x86_64.whl
+- This is pytorch 2.0.0 (alpha) build with numpy<2.0
+
+packages/torch-2.1.cheat-cp310-cp310-linux_x86_64.whl
+- This is a python "cheat wheel", it's pytorch 2.0.0 (alpha) build with numpy>2.0, but build version was set to 2.1.0
+- Works with ComfyUI v0.1.3
 
 ## TODOs
 
