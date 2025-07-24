@@ -7,7 +7,15 @@ cd pytorch
 
 #git checkout rocm_upgrade_CI_5.4 --force
 #git checkout rocm_nightly_5.4 --force
-#git submodule update --init --recursive
+
+# 2.1 starts -----------------------
+git checkout 2.1_rocm5.2
+ln -sf /usr/sbin/cmake3 /root/linux/venv/bin/cmake
+# 2.1 ends -----------------------
+
+git submodule update --init --recursive
+
+# used pytorch branches rocm_upgrade_CI_5.4 (2.0.0 - alpha)
 
 export CC=/usr/bin/gcc-14
 export CXX=/usr/bin/g++-14
@@ -34,8 +42,10 @@ export USE_CUDA=0
 export CMAKE_PREFIX_PATH="/opt/rocm;/opt/rocm/llvm"
 export hip_DIR=/opt/rocm/hip/lib/cmake/hip
 
-export PYTORCH_BUILD_VERSION=2.0
+export PYTORCH_BUILD_VERSION=2.1
 export PYTORCH_BUILD_NUMBER=0
 
 #python setup.py install
+CMAKE_COMMAND=cmake3 python setup.py bdist_wheel
+
 
