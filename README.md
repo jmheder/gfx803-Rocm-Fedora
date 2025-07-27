@@ -1,6 +1,6 @@
 # ROCm-5.4.1 for Fedora 42 
 
-ROCM support for GFX803, Polaris including pytorch 2.0.0 (alpha) for python 3.10.
+ROCM support for GFX803, Polaris including pytorch 2.1 for python 3.10.
 
 RX460, RX470, RX480, RX560, RX570, RX580, RX590
 
@@ -51,8 +51,9 @@ cd gfx803-Rocm-Fedora
 
 
 Install re-comiled (old) ROCm platform and pytorch. Rocm is placed into /opt/rocm and pytorch/pyvision into virtual environment. Please note
-the pytorch wheel uses version 2.0.0, there is an alternative version "dressed" at "2.1.0" to make some newer ComfyUI branches happy, but it's still
-the 2.0.0.
+the pytorch wheel uses version 2.1 there are two version one fake (2.0.0) and one real" to make some newer ComfyUI branches happy. Also
+please install the torchvision and torchaudio. Torchaudio is only for getting rid of those annoying errors during startup, and it was
+compiled to run on CPU.
 
 
 ```
@@ -60,7 +61,9 @@ rpm --install packages/ROCm-5.4.1-1_private_build.fc42.x86_64.rpm
 /usr/bin/python3.10 -m pip install
 /usr/bin/python3.10 -m venv venv
 source venv/bin/activate
-pip install packages/torch-2.0-cp310-cp310-linux_x86_64.whl
+pip install packages/torch-2.1+custom-cp310-cp310-linux_x86_64.whl
+pip install packages/torchvision-0.16.0+custom-cp310-cp310-linux_x86_64.whl
+pip install packages/torchaudio-2.1.2+custom-cp310-cp310-linux_x86_64.whl
 ```
 
 Verify that pytorch is working (matrix values will change):
@@ -103,28 +106,31 @@ sudo ldconfig
 ```
 
 
-## ComfyUI (using pytorch wheel 2.1)
-
-im working towards a fully correct working system. We'll have to use the pytorch-2.1 (cheat wheel for now, its actually 2.0) to fool ComfyUI to accept our build. Download ComfuUI and let the system download lots of stuff, which will be compatible with our build, and then tweak it to make ComfyUI happy. This install method is really slow and download a some GB to much, but its the safe and easy way to get ComfyUI running:
+## Installing ComfyUI 
 
 ```
-git clone ComfyUI.git
+git clone github.com/comfyanonymous/ComfyUI.git
 cd ComfyUI
-pip install -r requirements.txt 
-pip install torchvision==0.15.1+rocm5.4.2 --extra-index-url https://download.pytorch.org/whl
-pip install ../packages/torch-2.1-cp310-cp310-linux_x86_64.whl
-pip install spandrel==0.4.1 --no-deps
 ```
 
-It might complain against various issues, but it should work. Getting it to work correct also requires that all version.
-You should also ensure you'r using Numpy>2.0. Now please download tensor model from somewhere and place into \models and when 
-your ready launch ComfyUI:
+Ensure the requirements.txt file has the following lines, "torch=2.1+custom" and torchvision="0.16.0+custom" and torchaudio=2.1.2+custom
 
 ```
-python main.py
+pip install -r requirements.txt --extra-index-url ./packages
 ```
 
-Open a webbrowser and use the url http://127.0.0.1:8188
+This is a neat trick to install all packages needed for ComfyUI and make system understand that the packages it needs is a custom version inside the ./packages directory.
+Download a model from somewhere (i.e huggingface.co/models) and place this into the models\ directory, now your ready to run:
+
+
+```
+python main.py # standard start
+python main.py --listen 0.0.0.0 # webserver external access
+python main.py --cpu-vae --use-split-cross-attention --force-fp16  # Save VRAM, make larger images by dropping some of the minor stuff onto RAM/CPU
+```
+
+If you wish to get rid of the missing torchaudio, you can install the version in the packages directory. Open a webbrowser and use the url http://127.0.0.1:8188
+
 
 ## A1111
 
@@ -133,23 +139,23 @@ A1111 is a really nice and have a easy interface, but it's really had for progra
 
 ## Torch versions in directory packages
 
-packages/torch-2.0-cp310-cp310-linux_x86_64.whl
-- This is pytorch 2.0.0 (alpha) build with numpy<2.0
-
 packages/torch-2.1.cheat-cp310-cp310-linux_x86_64.whl
 - This is a python "cheat wheel", it's pytorch 2.0.0 (alpha) build with numpy>2.0, but build version was set to 2.1.0
 - Works with ComfyUI v0.1.3
 
-packages/torch-2.1-cp310-cp310-linux_x86_64.whl
+packages/torch-2.1+custom+gfx803-cp310-cp310-linux_x86_64.whl
 - This is pytorch 2.1.0 (alpha) build with numpy>2.0
 - Works with newest ComfyUI (tested 24-07-2025)
+
+packages/torchvision-0.16.0+custom+gfx803-cp310-cp310-linux_x86_64.whl
+packages/torchaudio-2.1.2+custom+gfx803-cp310-cp310-linux_x86_64.whl
+- Use with torch-2.1+custom package
 
 ## TODOs
 
 In prioritized order:
 
-* Compile torchvision
-* Compile torchaudio and include this into packages directory.
+* Get torchaudio to run on GFX803 GPU
 * Get the scripts to compile correctly
 
 ## Compiling
@@ -157,5 +163,4 @@ In prioritized order:
 Not yet .. you can see my build scripts in the /scripts folder but its, but bascially it was build using gcc-14 and I experienced 
 dozon of issues, 99% of those were compiler warnings. I'll try to see if I can find some time to make it happen. I few places I properly has to change a few lines of 
 code because the rules changed from warnings to hard-errors that needed to be fixed.
-
 
