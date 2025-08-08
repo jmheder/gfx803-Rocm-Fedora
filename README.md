@@ -164,3 +164,12 @@ Not yet .. you can see my build scripts in the /scripts folder but its, but basc
 dozon of issues, 99% of those were compiler warnings. I'll try to see if I can find some time to make it happen. I few places I properly has to change a few lines of 
 code because the rules changed from warnings to hard-errors that needed to be fixed.
 
+## OpenCL
+
+If you for any reasons any OpenCL to run correctly, you'll need to set ROC_ENABLE_PRE_VEGA=1, then it should work, also verify this with a call to clinfo
+
+```
+export ROC_ENABLE_PRE_VEGA=1 
+clinfo
+```
+
