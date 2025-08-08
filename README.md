@@ -136,7 +136,6 @@ If you wish to get rid of the missing torchaudio, you can install the version in
 
 A1111 is a really nice and have a easy interface, but it's really had for programmers, its a mightmare, it has too many dependencies too other libraries and is extremely hard to get running correctly. After bruteforce I finally got it working using packages/torch-2.1-cp310-cp310-linux_x86_64.whl. I'm not even sure I can reproduce it. Finding a proper way to install is not going to happen anytime soon.
 
-
 ## Torch versions in directory packages
 
 packages/torch-2.1.cheat-cp310-cp310-linux_x86_64.whl
@@ -151,6 +150,30 @@ packages/torchvision-0.16.0+custom+gfx803-cp310-cp310-linux_x86_64.whl
 packages/torchaudio-2.1.2+custom+gfx803-cp310-cp310-linux_x86_64.whl
 - Use with torch-2.1+custom package
 
+
+## OpenCL
+
+If you for any reasons any OpenCL to run correctly, you'll need to set ROC_ENABLE_PRE_VEGA=1, then it should work, also verify this with a call to clinfo
+
+```
+sudo usermod -aG video,render £USER
+export ROC_ENABLE_PRE_VEGA=1 
+clinfo
+```
+
+## Davinci Resolve
+
+if you need Davinci Resolve (20.1) you'll need to download and install it, it might complain about a missing zlib, but will give you a solution to skip this, do that.
+The important for me was to remove some specific old(?) libraries inside resolve, due to platform incompabilities : https://www.reddit.com/r/davinciresolve/comments/1d7cr2w/optresolvebinresolve_symbol_lookup_error/
+
+```
+cd /opt/resolve/libs
+sudo mkdir disabled-libraries
+sudo mv libglib* disabled-libraries
+sudo mv libgio* disabled-libraries
+sudo mv libgmodule* disabled-libraries
+```
+
 ## TODOs
 
 In prioritized order:
@@ -164,12 +187,5 @@ Not yet .. you can see my build scripts in the /scripts folder but its, but basc
 dozon of issues, 99% of those were compiler warnings. I'll try to see if I can find some time to make it happen. I few places I properly has to change a few lines of 
 code because the rules changed from warnings to hard-errors that needed to be fixed.
 
-## OpenCL
 
-If you for any reasons any OpenCL to run correctly, you'll need to set ROC_ENABLE_PRE_VEGA=1, then it should work, also verify this with a call to clinfo
-
-```
-export ROC_ENABLE_PRE_VEGA=1 
-clinfo
-```
 
