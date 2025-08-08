@@ -156,7 +156,7 @@ packages/torchaudio-2.1.2+custom+gfx803-cp310-cp310-linux_x86_64.whl
 If you for any reasons any OpenCL to run correctly, you'll need to set ROC_ENABLE_PRE_VEGA=1, then it should work, also verify this with a call to clinfo
 
 ```
-sudo usermod -aG video,render £USER
+sudo usermod -aG video,render $USER
 export ROC_ENABLE_PRE_VEGA=1 
 clinfo
 ```
