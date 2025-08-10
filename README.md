@@ -4,7 +4,9 @@ ROCM support for GFX803, Polaris including pytorch 2.1 for python 3.10.
 
 RX460, RX470, RX480, RX560, RX570, RX580, RX590
 
-This repository provides AMD ROCm platform and pytorch for ComfyUI. For historical changes see CHANGELOG.MD
+For historical changes see CHANGELOG.MD
+
+Repository goals : ROCm platform, ComfyUI, OpenCL, DaVinci Resolve
 
 ## GFX803
 
@@ -166,6 +168,7 @@ clinfo
 
 if you need Davinci Resolve (20.1) you'll need to download and install it, it might complain about a missing zlib, but will give you a solution to skip this, do that.
 The important for me was to remove some specific old(?) libraries inside resolve, due to platform incompabilities : https://www.reddit.com/r/davinciresolve/comments/1d7cr2w/optresolvebinresolve_symbol_lookup_error/
+** Dont ** touch anything within the colorgrading tab, it will crash resolve, I known this is a huge disadvantage and make resolve abit useless, but im trying to fix this.
 
 
 ```
@@ -180,6 +183,7 @@ sudo mv libgmodule* disabled-libraries
 
 In prioritized order:
 
+* Get Resolve to run correctly with colorgraing
 * Get torchaudio to run on GFX803 GPU
 * Get the scripts to compile correctly
 
