@@ -55,7 +55,7 @@ cd gfx803-Rocm-Fedora
 Install re-comiled (old) ROCm platform and pytorch. Rocm is placed into /opt/rocm and pytorch/pyvision into virtual environment. Please note
 the pytorch wheel uses version 2.1 there are two version one fake (2.0.0) and one real" to make some newer ComfyUI branches happy. Also
 please install the torchvision and torchaudio. Torchaudio is only for getting rid of those annoying errors during startup, and it was
-compiled to run on CPU.
+compiled to run only on CPU.
 
 
 ```
@@ -155,6 +155,8 @@ packages/torchaudio-2.1.2+custom+gfx803-cp310-cp310-linux_x86_64.whl
 
 ## OpenCL
 
+Will crash, it's bugged in comggr library module
+
 If you for any reasons any OpenCL to run correctly, you'll need to set ROC_ENABLE_PRE_VEGA=1, then it should work, also verify this with a call to clinfo.
 Please add export ROC_ENABLE_PRE_VEGA=1 to your ~/.bashrc or /etc/profile
 
@@ -168,7 +170,8 @@ clinfo
 
 if you need Davinci Resolve (20.1) you'll need to download and install it, it might complain about a missing zlib, but will give you a solution to skip this, do that.
 The important for me was to remove some specific old(?) libraries inside resolve, due to platform incompabilities : https://www.reddit.com/r/davinciresolve/comments/1d7cr2w/optresolvebinresolve_symbol_lookup_error/
-** Dont ** touch anything within the colorgrading tab, it will crash resolve, I known this is a huge disadvantage and make resolve abit useless, but im trying to fix this.
+
+Dont touch anything within the colorgrading tab, it will crash resolve, I known this is a huge disadvantage and make resolve abit useless, but im trying to fix this.
 
 
 ```
@@ -183,8 +186,8 @@ sudo mv libgmodule* disabled-libraries
 
 In prioritized order:
 
-* Get Resolve to run correctly with colorgraing
-* Get torchaudio to run on GFX803 GPU
+* Get OpenCL fixed (Davinvi Resolve)
+* Do more ROCm testing to verify it is running correctly
 * Get the scripts to compile correctly
 
 ## Compiling
