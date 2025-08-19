@@ -1,6 +1,6 @@
-# ROCm-5.4.1 for Fedora 42 
+# ROCm-5.4 for Fedora 42 
 
-ROCM support for GFX803, Polaris including pytorch 2.1 for python 3.10.
+ROCM support for GFX803
 
 RX460, RX470, RX480, RX560, RX570, RX580, RX590
 
@@ -115,7 +115,7 @@ git clone github.com/comfyanonymous/ComfyUI.git
 cd ComfyUI
 ```
 
-Ensure the requirements.txt file has the following lines, "torch=2.1+custom" and torchvision="0.16.0+custom" and torchaudio=2.1.2+custom
+Edit the requirements.txt file and ensure it has the following lines, "torch=2.1+custom" and torchvision="0.16.0+custom" and torchaudio=2.1.2+custom
 
 ```
 pip install -r requirements.txt --extra-index-url ./packages
@@ -133,10 +133,8 @@ python main.py --cpu-vae --use-split-cross-attention --force-fp16  # Save VRAM, 
 
 If you wish to get rid of the missing torchaudio, you can install the version in the packages directory. Open a webbrowser and use the url http://127.0.0.1:8188
 
+If you'r into A1111 I can't really help. A1111 is a really nice and have a easy interface, but it's really had for programmers, its a mightmare, it has too many dependencies too other libraries and is extremely hard to get running correctly. After bruteforce I finally got it working using packages/torch-2.1-cp310-cp310-linux_x86_64.whl. I'm not even sure I can reproduce it. Finding a proper way to install is not going to happen anytime soon.
 
-## A1111
-
-A1111 is a really nice and have a easy interface, but it's really had for programmers, its a mightmare, it has too many dependencies too other libraries and is extremely hard to get running correctly. After bruteforce I finally got it working using packages/torch-2.1-cp310-cp310-linux_x86_64.whl. I'm not even sure I can reproduce it. Finding a proper way to install is not going to happen anytime soon.
 
 ## Torch versions in directory packages
 
@@ -153,26 +151,20 @@ packages/torchaudio-2.1.2+custom+gfx803-cp310-cp310-linux_x86_64.whl
 - Use with torch-2.1+custom package
 
 
-## OpenCL
+## OpenCL 1.2
 
-Will crash, it's bugged in comggr library module
-
-If you for any reasons any OpenCL to run correctly, you'll need to set ROC_ENABLE_PRE_VEGA=1, then it should work, also verify this with a call to clinfo.
-Please add export ROC_ENABLE_PRE_VEGA=1 to your ~/.bashrc or /etc/profile
+OpenCL is supported. It's not fully acclerated (compared to rocm 6.x, as I needed to removed some function to get support in Davinvi Resolve, but you won't feel the difference)
 
 ```
 sudo usermod -aG video,render $USER
-export ROC_ENABLE_PRE_VEGA=1 
+export ROC_ENABLE_PRE_VEGA=1
 clinfo
 ```
 
 ## Davinci Resolve
 
-if you need Davinci Resolve (20.1) you'll need to download and install it, it might complain about a missing zlib, but will give you a solution to skip this, do that.
-The important for me was to remove some specific old(?) libraries inside resolve, due to platform incompabilities : https://www.reddit.com/r/davinciresolve/comments/1d7cr2w/optresolvebinresolve_symbol_lookup_error/
-
-Dont touch anything within the colorgrading tab, it will crash resolve, I known this is a huge disadvantage and make resolve abit useless, but im trying to fix this.
-
+if you need Davinci Resolve (20.1) you'll need to download and install it, it might complain about a missing zlib, but will give you a solution to skip this, do that. The important for me was to remove some specific old(?) libraries inside resolve, due to platform incompabilities : https://www.reddit.com/r/davinciresolve/comments/1d7cr2w/optresolvebinresolve_symbol_lookup_error/
+Remeber you'll need "export ROC_ENABLE_PRE_VEGA=1" before running DaVinci Resolve 
 
 ```
 cd /opt/resolve/libs
@@ -186,15 +178,10 @@ sudo mv libgmodule* disabled-libraries
 
 In prioritized order:
 
-* Get OpenCL fixed (Davinvi Resolve)
+* Make OpenCL more stable (some colorgrading wheels in Resolve does not work)
 * Do more ROCm testing to verify it is running correctly
 * Get the scripts to compile correctly
 
 ## Compiling
 
-Not yet .. you can see my build scripts in the /scripts folder but its, but bascially it was build using gcc-14 and I experienced 
-dozon of issues, 99% of those were compiler warnings. I'll try to see if I can find some time to make it happen. I few places I properly has to change a few lines of 
-code because the rules changed from warnings to hard-errors that needed to be fixed.
-
-
-
+Currently the compiling should work up to the 19'th script (OpenCL), after that is not completed as I have patched not commited (to my scripts).

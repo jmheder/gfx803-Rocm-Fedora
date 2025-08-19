@@ -1,4 +1,4 @@
-#! /usr/bin/bash
+#!/usr/bin/bash
 
 # This will remove all rocm packages, don't mix platforms, old scripts and broken userland will screw everything up
 dnf remove rocm* hip*

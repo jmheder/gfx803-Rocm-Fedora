@@ -1,4 +1,9 @@
-#! /usr/bin/bash
+#!/usr/bin/bash
+
+if [ -z "$ROCM_PATH" ]; then
+  echo "Error: ROCM_PATH is not set."
+  exit 1
+fi
 
 ############################################################################################
 # Step. hipcc
@@ -10,6 +15,9 @@ git clone -b "$ROCM_BRANCH" https://github.com/ROCm-Developer-Tools/hipamd.git
 git clone -b "$ROCM_BRANCH" https://github.com/ROCm-Developer-Tools/hip.git
 git clone -b "$ROCM_BRANCH" https://github.com/ROCm-Developer-Tools/ROCclr.git
 git clone -b "$ROCM_BRANCH" https://github.com/RadeonOpenCompute/ROCm-OpenCL-Runtime.git
+
+export CC=/opt/rocm/llvm/bin/clang
+export CXX=/opt/rocm/llvm/bin/clang++
 
 cd hipamd
 git submodule update --init --recursive
@@ -28,6 +36,7 @@ cd ..
 
 export HIPAMD_DIR="$(readlink -f hipamd)"
 export HIP_DIR="$(readlink -f hip)"
+echo $HIPAMD_DIR
 cd "$HIPAMD_DIR"
 mkdir -p build-dir
 

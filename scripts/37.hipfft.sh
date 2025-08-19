@@ -1,4 +1,9 @@
-#! /usr/bin/bash
+#!/usr/bin/bash
+
+if [ -z "$ROCM_PATH" ]; then
+  echo "Error: ROCM_PATH is not set."
+  exit 1
+fi
 
 ############################################################
 # Step. rocPRIMT

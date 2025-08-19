@@ -1,13 +1,21 @@
-#! /usr/bin/bash
+#!/usr/bin/bash
+
+if [ -z "$ROCM_PATH" ]; then
+  echo "Error: ROCM_PATH is not set."
+  exit 1
+fi
 
 ##############################################
 # Step. llvm
 ##############################################
 # clone master rocm
-git clone https://github.com/RadeonOpenCompute/llvm-project.git ~/linux/llvm-project
+#git clone https://github.com/RadeonOpenCompute/llvm-project.git ~/linux/llvm-project
 
 cd llvm-project
 git checkout rocm-5.4.1 --force
+
+export CC=/usr/bin/gcc-14
+export CXX=/usr/bin/g++-14
 
 mkdir -p build-llvm
 cmake -S llvm -B build-llvm \
@@ -24,6 +32,10 @@ cmake -S llvm -B build-llvm \
 /usr/bin/sed -i "14i#include <cstdint>" ~/linux/llvm-project/llvm/include/llvm/OffloadArch/OffloadArch.h
 /usr/bin/sed -i "17i#include <cstdint>" ~/linux/llvm-project/llvm/lib/Target/X86/MCTargetDesc/X86MCTargetDesc.h
 /usr/bin/sed -i "17i#include <cstdint>" ~/linux/llvm-project/llvm/lib/Target/AMDGPU/MCTargetDesc/AMDGPUMCTargetDesc.h
+
+# bug in OpenCL / Resolve
+/usr/bin/sed -i "504i return;" ~/linux/llvm-project/llvm/lib/Target/AMDGPU/SIOptimizeVGPRLiveRange.cpp
+
 
 # compile
 cmake --build build-llvm -j$JOBS

@@ -1,12 +1,19 @@
 #! /usr/bin/bash
 
+if [ -z "$ROCM_PATH" ]; then
+  echo "Error: ROCM_PATH is not set."
+  exit 1
+fi
+
 ############################################################
 # Step. rocPRIMT
 ############################################################
 cd ~/linux
 
-git clone https://github.com/ROCmSoftwarePlatform/composable_kernel.git
-cd composable_kernel
+# No reasons to build this on gfx803
+
+#git clone https://github.com/ROCmSoftwarePlatform/composable_kernel.git
+#cd composable_kernel
 #git checkout rocm-5.4.1
 
 #cmake -S . -B build-dir \

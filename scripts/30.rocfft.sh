@@ -1,5 +1,10 @@
 #! /usr/bin/bash
 
+if [ -z "$ROCM_PATH" ]; then
+  echo "Error: ROCM_PATH is not set."
+  exit 1
+fi
+
 ############################################################
 # Step. rocfft
 ############################################################
@@ -20,7 +25,14 @@ export CC=/opt/rocm/bin/hipcc
 cmake .. \
  -DAMDGPU_TARGETS=$GPU_REV \
  -DCMAKE_INSTALL_PREFIX=$ROCM_PATH \
- -DCMAKE_BUILD_TYPE=$RELEASE_TYPE
+ -DCMAKE_BUILD_TYPE=$RELEASE_TYPE \
+  -DBUILD_CLIENTS_BENCH=OFF \
+  -DBUILD_CLIENTS_TESTS=OFF \
+  -DBUILD_CLIENTS_SAMPLES=OFF \
+  -DBUILD_TESTING=OFF \
+  -DCPU_REFERENCE=OFF \
+  -DROCFFT_RUNTIME_COMPILE=ON
+  -DROCFFT_RUNTIME_COMPILE_DEFAULT=OFF
 
 cd ..
 

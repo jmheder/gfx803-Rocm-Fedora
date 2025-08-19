@@ -1,5 +1,10 @@
 #! /usr/bin/bash
 
+if [ -z "$ROCM_PATH" ]; then
+  echo "Error: ROCM_PATH is not set."
+  exit 1
+fi
+
 # === Configuration ===
 INSTALL_PREFIX=/opt/rocm
 
@@ -24,4 +29,4 @@ cmake -S . -B build-dir \
 # compile
 cmake --build build-dir -j$JOBS
 
-#sudo make install
+cmake --install build-dir

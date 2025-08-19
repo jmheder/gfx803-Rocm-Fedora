@@ -1,3 +1,10 @@
+#! /usr/bin/bash
+
+if [ -z "$ROCM_PATH" ]; then
+  echo "Error: ROCM_PATH is not set."
+  exit 1
+fi
+
 ############################################################
 # Step. rocPRIMT
 ############################################################
@@ -9,7 +16,6 @@ git submodule update --init --recursive
 
 export CC=/usr/bin/gcc-14
 export CXX=/usr/bin/g++-14
-
 
 export USE_ROCM=0
 export USE_CPU=1

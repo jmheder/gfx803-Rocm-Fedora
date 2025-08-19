@@ -45,32 +45,4 @@ sh ./16.rocrruntime.sh
 sh ./17.rocminfo.sh
 sh ./18.comgr.sh
 sh ./19.opencl.sh
-sh ./20.hipcc.sh
-sh ./21.roctracer.sh
 
-# Libraries
-sh ./30.rocfft.sh
-sh ./31.rocblas.sh
-sh ./32.rocprim.sh
-sh ./33.rocsolver.sh
-sh ./34.rocrand.sh
-sh ./34a.rocsparse.sh
-sh ./35.hipsparse.sh
-sh ./37.hipfft.sh
-sh ./38.hipblas.sh
-sh ./39.half.sh
-#sh ./40.composable.sh  it's from 5.7.x, not needed
-sh ./41.miopen.sh
-sh ./42.hipCUB.sh
-sh ./43.rocThrust.sh
-sh ./44.rocm-smi.sh
-sh ./45.rccl.sh
-sh ./46.hipsolve.sh
-
-# missing files
-# opencl icd ?? 
-
-# torch wheels - takes tooooo long 
-sh ./51.pythontorch.sh
-sh ./52.pythonvision.sh
-sh ./53.pythonaudio.sh

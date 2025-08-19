@@ -1,4 +1,9 @@
-#! /usr/bin/bash
+#!/usr/bin/bash
+
+if [ -z "$ROCM_PATH" ]; then
+  echo "Error: ROCM_PATH is not set."
+  exit 1
+fi
 
 ##############################################
 # Step. thunk
@@ -7,6 +12,9 @@
 git clone https://github.com/ROCm/rocm-core.git
 cd rocm-core
 git checkout rocm-5.5.x --force
+
+export CC=/usr/bin/gcc-14
+export CXX=/usr/bin/g++-14
 
 cmake -S . -B build-dir \
   -DCMAKE_VERBOSE_MAKEFILE=1 \

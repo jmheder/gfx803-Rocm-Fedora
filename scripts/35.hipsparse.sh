@@ -9,8 +9,8 @@ fi
 # Step. rocPRIMT
 ############################################################
 cd ~/linux
-git clone https://github.com/ROCmSoftwarePlatform/rocPRIM.git
-cd rocPRIM
+git clone https://github.com/ROCmSoftwarePlatform/hipSPARSE.git
+cd hipSPARSE
 git checkout rocm-5.4.1
 
 export CXX=/opt/rocm/bin/hipcc
@@ -21,7 +21,8 @@ cmake -S . -B build-dir \
  -DCMAKE_INSTALL_PREFIX=$ROCM_PATH \
  -DCMAKE_BUILD_TYPE=$RELEASE_TYPE \
  -DROCM_PATH=/opt/rocm \
- -DCMAKE_PREFIX_PATH=/opt/rocm
+ -DCMAKE_PREFIX_PATH=/opt/rocm \
+ -DCMAKE_EXE_LINKER_FLAGS='-no-pie'
 
 # compile
 cmake --build build-dir -j$JOBS

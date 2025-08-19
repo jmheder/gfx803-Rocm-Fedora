@@ -1,4 +1,9 @@
-#! /usr/bin/bash
+#!/usr/bin/bash
+
+if [ -z "$ROCM_PATH" ]; then
+  echo "Error: ROCM_PATH is not set."
+  exit 1
+fi
 
 ############################################################
 # Step. rocPRIMT
@@ -6,7 +11,7 @@
 cd ~/linux
 git clone https://github.com/ROCmSoftwarePlatform/rocRAND.git
 cd rocRAND
-git checkout rocm-5.4.1
+git checkout rocm-5.4.1 --force
 git submodule update --init
 
 export CXX=/opt/rocm/bin/hipcc

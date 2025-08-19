@@ -27,4 +27,24 @@ Changelog for https://github.com/jmheder/gfx803-Rocm-Fedora
 * torchvision compiled with GPU support
 * torchaudio compiled for CPU only (atleast for now), too many cmake issues
 * Dropped the 2.0 python wheel
-* Tagged Fedora42-ROCM5.4.1-Pytorch2.1.ComfyUI-v0.3.45
+
+15-08-2025
+
+* ROCm recompiled
+* Release with debug infomation (RelWithDebInfo)
+* GCC-14 used everywhere
+* Recreate rocsparse script (was never created)
+* compgr library somehow ended up in /lib64, including cmakes for those, cleaned up distro
+* Script now exit if ROCM_PATH is not set, avoid stuff being installed into /lib64
+* OpenCL (Davinvi Resolve) crashed in SIOptimizeVGPRLiveRange::optimizeLiveRange(), fixed with immidiately return, i.e. no optimization
+* ROC_ENABLE_PRE_VEGA=1 not longer needed, ROCclr updated
+* Cleaned scripts and added more inline patches
+* Roctracer was missing script, used roctracer internal (modified) for now
+* The Rocm version is incorrectly labeled as 5.4.3
+* Tagged Fedora42-ROCM5.4.1-GFX803-v2
+
+XX-XX-2025
+
+* ROC_ENABLE_PRE_VEGA=1 not longer needed, ROCclr updated
+
+
